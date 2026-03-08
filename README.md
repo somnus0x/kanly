@@ -75,6 +75,21 @@ done
 
 R2 triggers: schemas, money flows, contract deploys, public API changes, auth flow changes.
 
+## Proactive Behavior (built-in)
+
+Kanly skills auto-fire at the right moments — no CLAUDE.md snippet required:
+
+| Skill | Auto-fires when... |
+|---|---|
+| `/guard` | Plan mode (classify changes), before commits (scan for R2) |
+| `/dissent` | Before finalizing any plan (review for risks) |
+| `/spec` | During plan review (check BINDING compliance) |
+| `/scope` | During planning (check for scope drift) |
+| `/learn` | Starting work in a domain (surface gotchas) |
+| `/handoff` | Session start (check dispatches), after cross-repo changes |
+
+Want to customize triggers? See `CLAUDE_SNIPPET.md` for optional CLAUDE.md overrides.
+
 ## Philosophy
 
 - **Plain markdown.** No database, no API. Just files.
@@ -82,6 +97,7 @@ R2 triggers: schemas, money flows, contract deploys, public API changes, auth fl
 - **Convention over configuration.** Standard paths, standard format.
 - **Async coordination.** Sessions don't need to be running simultaneously.
 - **Governance, not bureaucracy.** The point is intentionality, not paperwork.
+- **Zero config.** Skills self-trigger — no CLAUDE.md wiring needed.
 
 ## File Layout
 

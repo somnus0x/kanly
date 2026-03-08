@@ -1,6 +1,6 @@
 ---
 name: dissent
-description: Raise concerns when a proposed code change introduces risk the user may not see. Use when you detect increased coupling between modules, flexible things being hardcoded, scope creep beyond what was asked, or established patterns being broken. Also use when user says "dissent", "challenge", "pushback", "what could go wrong", or "review this for risks".
+description: Raise concerns when a proposed code change introduces risk the user may not see. Use when you detect increased coupling between modules, flexible things being hardcoded, scope creep beyond what was asked, or established patterns being broken. Also use when user says "dissent", "challenge", "pushback", "what could go wrong", or "review this for risks". Use proactively before finalizing any implementation plan to review for architectural risks, coupling increases, and hardened assumptions.
 argument-hint: [review|override|log]
 ---
 

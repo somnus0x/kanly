@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Manage engineering learnings, gotchas, and patterns per project. Use when user says "learn", "learning", "gotcha", or after discovering a non-obvious fix, migration pattern, or debugging insight worth preserving.
+description: Manage engineering learnings, gotchas, and patterns per project. Use when user says "learn", "learning", "gotcha", or after discovering a non-obvious fix, migration pattern, or debugging insight worth preserving. Use proactively when starting work in a domain to surface relevant past gotchas (run `learn check <domain>`). Use proactively during planning to check if past learnings affect the proposed approach.
 argument-hint: [add <insight>|check <domain>|list]
 ---
 

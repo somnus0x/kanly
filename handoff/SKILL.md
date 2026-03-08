@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: Write or check cross-repo handoff notes between Claude Code sessions. Use when user says "handoff", "write handoff", "check handoffs", or after completing work that affects another repo.
+description: Write or check cross-repo handoff notes between Claude Code sessions. Use when user says "handoff", "write handoff", "check handoffs", or after completing work that affects another repo. Use proactively at session start to check for pending dispatches (run `handoff check`). Use proactively after changes that affect API contracts, shared types, or cross-repo interfaces to prompt writing a dispatch.
 argument-hint: [write <target>|check|done <file>]
 ---
 

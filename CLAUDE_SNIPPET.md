@@ -1,13 +1,15 @@
 # kanly — Optional CLAUDE.md Integration
 
-> Paste this into your project or global CLAUDE.md for tighter kanly integration.
-> This is OPTIONAL — all kanly skills work standalone without it.
-> This snippet adds proactive behavioral hooks that make skills fire automatically.
+> Proactive behavior is now **built into the skill descriptions** — kanly skills auto-fire
+> during plan mode, before commits, at session start, etc. without any CLAUDE.md changes.
+>
+> This snippet is OPTIONAL — only paste it if you want to **customize** the proactive triggers
+> or add project-specific overrides beyond the defaults.
 
 ```markdown
-# Kanly Governance Hooks
+# Kanly Governance Hooks (optional overrides)
 
-## Proactive Checks (auto-behavior)
+## Proactive Checks (customize defaults)
 
 Before non-trivial changes:
 - Run `/guard classify` to tag reversibility. If R1/R2, run `/dissent review` on the approach.

@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Manage project specifications with BINDING and NON-BINDING sections. Use when user says "spec", wants to add/modify spec rules, or needs to check code against spec.
+description: Manage project specifications with BINDING and NON-BINDING sections. Use when user says "spec", wants to add/modify spec rules, or needs to check code against spec. Use proactively during plan review to verify proposed changes comply with BINDING spec sections (run `spec check`). Use proactively after implementing changes that establish new invariants to suggest binding them (run `spec bind`).
 argument-hint: [bind <rule>|note <observation>|check|diff]
 ---
 

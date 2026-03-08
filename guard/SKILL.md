@@ -1,6 +1,6 @@
 ---
 name: guard
-description: Classify how reversible a code change is before applying it. Use before non-trivial changes, or when user says "guard", "classify", "reversibility", or when changes touch database schemas, money/payment logic, smart contracts, public APIs, or auth flows. These are high-risk domains where mistakes are hard to undo.
+description: Classify how reversible a code change is before applying it. Use before non-trivial changes, or when user says "guard", "classify", "reversibility", or when changes touch database schemas, money/payment logic, smart contracts, public APIs, or auth flows. These are high-risk domains where mistakes are hard to undo. Use proactively when planning implementation (plan mode) to classify all proposed changes before finalizing the plan. Use proactively before committing non-trivial changes to scan for R2 territory.
 argument-hint: [classify|check|tripwire]
 ---
 

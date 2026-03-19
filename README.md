@@ -2,29 +2,30 @@
 
 > *"Kanly — the rules of vendetta under the Great Convention. The formal feud or war of assassins between Great Houses."*
 
-Multi-repo governance toolkit for Claude Code. Six protocols governing how parallel sessions coordinate, what gets built, what doesn't, and when to push back — like the Great Convention governs how Houses interact.
+Multi-repo governance toolkit for Claude Code. Seven protocols governing how parallel sessions coordinate, what gets built, what doesn't, and when to push back — like the Great Convention governs how Houses interact.
 
-## The Six Protocols
+## The Seven Protocols
 
 | Skill | Dune Analog | What it does |
 |---|---|---|
-| `/handoff` | **Dispatches** | Pass context between repos/sessions. What changed, what the other house needs to do. |
+| `/handoff` | **Dispatches** | Pass context between repos/sessions. What changed, what the other house needs to do. Verify API contracts against code. |
 | `/spec` | **Treaties** | Manage SPEC.md with BINDING (ratified treaties) vs NON-BINDING (proposals). Approval gates on BINDING changes. |
 | `/scope` | **Exclusion zones** | Manage NON_GOALS.md. Declare what's out of scope. Check if current work drifts into forbidden territory. |
 | `/learn` | **The Spice** | Capture engineering learnings, gotchas, and migration patterns. Knowledge that must flow between sessions. |
-| `/guard` | **The Gom Jabbar** | Classify change reversibility (R0/R1/R2). Enforce safety gates before the point of no return. |
+| `/guard` | **The Gom Jabbar** | Classify change reversibility (R0/R1/R2). Map blast radius. Verify dead code. Enforce safety gates before the point of no return. |
 | `/dissent` | **Truthsayer** | Raise concerns when a change increases coupling, hardens assumptions, or expands blast radius. |
+| `/replace` | **Kanly itself** | Kill-and-prove protocol for full replacements. The old path must become provably dead. |
 
 ## Install
 
 ```bash
-# All six protocols
-for skill in handoff spec scope learn guard dissent; do
+# All seven protocols
+for skill in handoff spec scope learn guard dissent replace; do
   cp -r kanly/$skill ~/.claude/skills/$skill
 done
 
 # Or symlink for development
-for skill in handoff spec scope learn guard dissent; do
+for skill in handoff spec scope learn guard dissent replace; do
   ln -s $(pwd)/kanly/$skill ~/.claude/skills/$skill
 done
 ```
@@ -36,6 +37,7 @@ done
 /handoff write frontend        # Write a dispatch (solo: repo, team: person)
 /handoff check                 # Read pending dispatches
 /handoff done frontend         # Delete after executing (git history = archive)
+/handoff verify                # Check code matches the handoff's API contract
 
 # ── Spec: BINDING/NON-BINDING treaties ──
 /spec bind "Settlement must complete within 24h of resolution"
@@ -57,6 +59,12 @@ done
 /guard classify                # Tag current change as R0/R1/R2
 /guard check                   # Scan staged changes for R2 territory
 /guard tripwire                # Show all R2 domains for this project
+/guard trace <symbol>          # Map blast radius before changing something
+/guard verify <symbol>         # Verify removed code is actually dead
+
+# ── Replace: kill-and-prove ──
+/replace                       # Full replacement — old path must die
+                               # Orchestrates: confirm → trace → execute → verify
 
 # ── Dissent: the Truthsayer ──
 /dissent                       # Review current approach for concerns
@@ -81,8 +89,9 @@ Kanly skills auto-fire at the right moments — no CLAUDE.md snippet required:
 
 | Skill | Auto-fires when... |
 |---|---|
-| `/guard` | Plan mode (classify changes), before commits (scan for R2) |
+| `/guard` | Plan mode (classify changes), before commits (scan for R2), before changing exports (trace), after deletions (verify) |
 | `/dissent` | Before finalizing any plan (review for risks) |
+| `/replace` | When message starts with `REPLACE:` or intent is full replacement |
 | `/spec` | During plan review (check BINDING compliance) |
 | `/scope` | During planning (check for scope drift) |
 | `/learn` | Starting work in a domain (surface gotchas) |
@@ -140,9 +149,16 @@ Want to customize triggers? See `CLAUDE_SNIPPET.md` for optional CLAUDE.md overr
                   │    Ask approval
                   │          │
                   ▼          ▼
+           /guard trace ← map blast radius
+                  │
                Make the change
                   │
-       ┌──────────┼──────────┐
+          ┌───────┤ (if replacement)
+          │       │
+   /guard verify  │
+   (confirm kill) │
+          │       │
+       ┌──┴───────┼──────────┐
        │          │          │
   /learn add  /spec bind  /handoff write
        │          │          │

@@ -1,7 +1,7 @@
 ---
 name: guard
-description: Classify how reversible a code change is before applying it. Use before non-trivial changes, or when user says "guard", "classify", "reversibility", or when changes touch database schemas, money/payment logic, smart contracts, public APIs, or auth flows. These are high-risk domains where mistakes are hard to undo. Use proactively when planning implementation (plan mode) to classify all proposed changes before finalizing the plan. Use proactively before committing non-trivial changes to scan for R2 territory.
-argument-hint: [classify|check|tripwire]
+description: Classify how reversible a code change is before applying it. Use before non-trivial changes, or when user says "guard", "classify", "reversibility", "blast radius", "trace", "what calls this", "is this dead", "verify removal", or when changes touch database schemas, money/payment logic, smart contracts, public APIs, or auth flows. These are high-risk domains where mistakes are hard to undo. Use proactively when planning implementation (plan mode) to classify all proposed changes before finalizing the plan. Use proactively before committing non-trivial changes to scan for R2 territory. Use `trace` before changing any function/type/endpoint to map blast radius. Use `verify` after removing or replacing code to confirm the old path is dead.
+argument-hint: [classify|check|tripwire|trace|verify]
 ---
 
 # Guard — Reversibility Gate
@@ -63,6 +63,63 @@ Scan current changes for R2 territory. Run before committing.
      - Minimal safe approach (if any)
 4. If R2 detected, **do not proceed without explicit user approval**
 
+### `guard trace <symbol>`
+
+Map the blast radius of a change before making it. Takes a function name, endpoint, type, constant, or file path.
+
+1. **Identify the target** — resolve the symbol to its definition (file:line)
+2. **Direct callers** — grep for all call sites, imports, and references across the repo
+3. **Type consumers** — if the target is a type/interface, find all files that use it
+4. **Test references** — which tests exercise this symbol
+5. **Cross-repo surface** — if the symbol is exported, appears in an API route, or is a shared type, flag it as cross-repo blast radius
+6. **Output a ranked impact list:**
+
+```
+BLAST RADIUS: <symbol>
+Defined: <file:line>
+
+Direct callers (N):
+  - <file:line> — <one-line context>
+
+Type consumers (N):
+  - <file:line> — <one-line context>
+
+Tests (N):
+  - <file:line>
+
+Cross-repo exposure: <yes/no — why>
+
+Risk: R<N> — <based on blast radius size + exposure>
+```
+
+If blast radius is large (>10 callers) or crosses repo boundaries, auto-classify as R1+. If it touches money/schema/auth domains, auto-classify as R2.
+
+### `guard verify`
+
+Verify that removed/replaced code is actually dead. Run after a REPLACE: or deletion.
+
+1. **Accept target** — a function name, route path, file path, or type that was removed/replaced
+2. **Search for survivors** — grep the entire repo for:
+   - Direct references (imports, calls, instantiations)
+   - String references (dynamic imports, route strings, config keys)
+   - Re-exports (barrel files, index.ts)
+   - Test references (mocks, fixtures, assertions)
+   - Comments/docs that reference it (flag but don't block)
+3. **Report:**
+   - **DEAD** — no references found. Safe to delete.
+   - **ALIVE** — still referenced at [locations]. List each with file:line and context.
+   - **GHOST** — only referenced in comments/docs. Not blocking but should be cleaned up.
+
+```
+VERIFY: <symbol>
+Status: DEAD | ALIVE | GHOST
+
+References (N):
+  - <file:line> — <context> — <type: import|call|string|re-export|test|comment>
+
+Verdict: <safe to remove | still live at N locations | comments-only, clean up>
+```
+
 ### `guard tripwire`
 
 Show the R2 tripwire domains for this project.
@@ -115,6 +172,9 @@ If other kanly skills are installed, these work well together:
 - After R2 is flagged → `/spec bind` if a new spec rule is needed
 - After a non-obvious fix → `/learn add` to capture the gotcha
 - If R2 change affects another repo/person → `/handoff write`
+- After `guard trace` shows cross-repo exposure → `/handoff write` to notify consumers
+- After `guard verify` shows ALIVE → fix references before proceeding
+- Before `REPLACE:` protocol → `guard trace` first to map blast radius, `guard verify` after to confirm kill
 
 These are recommendations, not requirements. This skill works fully standalone.
 

@@ -1,7 +1,7 @@
 ---
 name: handoff
-description: Write or check cross-repo handoff notes between Claude Code sessions. Use when user says "handoff", "write handoff", "check handoffs", or after completing work that affects another repo. Use proactively at session start to check for pending dispatches (run `handoff check`). Use proactively after changes that affect API contracts, shared types, or cross-repo interfaces to prompt writing a dispatch.
-argument-hint: [write <target>|check|done <file>]
+description: Write or check cross-repo handoff notes between Claude Code sessions. Use when user says "handoff", "write handoff", "check handoffs", "verify contract", "api drift", "does this match the handoff", or after completing work that affects another repo. Use proactively at session start to check for pending dispatches (run `handoff check`). Use proactively after changes that affect API contracts, shared types, or cross-repo interfaces to prompt writing a dispatch. Use `verify` after receiving a handoff to check if your code matches the declared contract.
+argument-hint: [write <target>|check|done <file>|verify]
 ---
 
 # Handoff — Dispatches Between Houses
@@ -90,6 +90,45 @@ Delete a dispatch after executing it. The simple lifecycle.
 1. Delete `<repo>/.claude/handoffs/<file>.md`
 2. Suggest committing the deletion: `git add -A .claude/handoffs/ && git commit -m "handoff: done — <summary>"`
 3. Git history preserves the dispatch for future reference.
+
+### `handoff verify`
+
+Check if the current codebase matches the API contract declared in a handoff dispatch. Detects drift between what was promised and what exists.
+
+1. **Find the contract** — read the most recent handoff dispatch (from `handoff check` or user-specified). Extract all API contract tables: endpoints, methods, routes, body shapes, response shapes, auth levels, status enums.
+2. **Scan the codebase** — for each declared endpoint:
+   - Find the route definition (search for path string in route files, controllers, handlers)
+   - Find the handler/controller method
+   - Extract the actual request body type/validation
+   - Extract the actual response shape
+   - Check auth decorator/middleware
+3. **Diff declared vs actual:**
+
+```
+HANDOFF VERIFY: <dispatch title>
+
+MATCH (N):
+  ✓ POST /deposit/create-intent — route, body, response all match
+
+DRIFT (N):
+  ✗ GET /bets — declared response: BetDocument[], actual: { bets: BetDocument[], count: number }
+    Location: <file:line>
+    Handoff says: flat array
+    Code says: wrapped object
+
+MISSING (N):
+  ? POST /deposit/testnet — declared in handoff but no route found in codebase
+
+UNDOCUMENTED (N):
+  + DELETE /bets/:id — exists in code but not in any handoff
+
+VERDICT: <N match, N drift, N missing, N undocumented>
+```
+
+4. **If drift or missing found**, suggest either:
+   - Fix the code to match the contract
+   - Write a new handoff dispatch to update the contract
+   - Ask which is correct (code or handoff)
 
 ---
 

@@ -67,6 +67,57 @@ This reduces dissent fatigue. Generic questions get ignored. Surgical questions 
 
 ---
 
+## Structured Debate Rounds
+
+For R1 decisions (costly to reverse), dissent escalates from single-shot to a **structured bull/bear debate** with a hard round limit. Stolen from TradingAgents' adversarial debate pattern — but compressed for a solo builder, not a trading desk.
+
+### When to trigger
+
+Structured debate activates when:
+- The change is R1 (costly to reverse) — database migrations, API contracts, architectural changes
+- Multiple valid approaches exist and the tradeoffs aren't obvious
+- The operator explicitly asks: `dissent debate`
+
+Do NOT use structured debate for R2 decisions. Single-shot dissent is enough.
+
+### How it works
+
+**Round 1 — Bull case**
+State the strongest argument FOR the proposed approach. Be genuine — steelman it.
+- What problem does it solve?
+- What does the operator gain?
+- What's the best-case outcome?
+
+**Round 1 — Bear case**
+State the strongest argument AGAINST. No softening.
+- What breaks or becomes harder?
+- What assumption is most fragile?
+- What's the worst-case outcome?
+
+**Round 2 — Rebuttal**
+Bull responds to the bear's strongest point. Bear responds to the bull's strongest point. One rebuttal each — no infinite loops.
+
+**Judgment**
+After 2 rounds, render a verdict:
+
+```
+DEBATE VERDICT: [PROCEED | PAUSE | REDESIGN]
+
+Bull's strongest point: [1 sentence]
+Bear's strongest point: [1 sentence]
+Unresolved risk: [the thing neither side could fully answer]
+Recommendation: [what to do next — proceed as-is, add a safeguard, or rethink]
+```
+
+### Hard limits
+
+- **Max 2 rounds.** Not 3, not 5. Two rounds of bull/bear is enough to surface real risk. More rounds is deliberation theater.
+- **Total debate output under 300 words.** Compress, don't expand.
+- **No debate on R2 decisions.** If it's easily reversed, just do it.
+- **Operator can cut the debate at any point** with `dissent override`. The debate serves the builder, not the process.
+
+---
+
 ## Commands
 
 ### `dissent` (no args) or `dissent review`
@@ -79,6 +130,16 @@ Review the current approach for concerns using the surgical process above.
 4. Surface only concerns that code can't resolve
 5. If concerns found, raise using the format below
 6. If no concerns, say "No dissent. Approach looks clean."
+
+### `dissent debate`
+
+Trigger structured bull/bear debate on the current approach (R1 decisions only).
+
+1. Run Round 1 — Bull case (steelman the approach)
+2. Run Round 1 — Bear case (strongest argument against)
+3. Run Round 2 — One rebuttal each
+4. Render verdict: PROCEED, PAUSE, or REDESIGN
+5. Total output under 300 words
 
 ### `dissent override`
 

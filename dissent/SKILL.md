@@ -31,16 +31,54 @@ Raise a dissent when ANY of these conditions are detected:
 
 ---
 
+## Surgical Dissent Process
+
+When dissent is triggered (automatically or via command), follow this process:
+
+### Step 1: Trace the decision tree
+
+Identify every decision embedded in the proposed change. Not just "is this risky?" but "what specific decisions are being made here, and what does each one assume?"
+
+For each decision branch:
+- What's being decided?
+- What alternatives exist?
+- What assumption makes this the right choice?
+
+### Step 2: Self-answer from codebase
+
+**Before asking the operator anything**, check the codebase:
+
+- Read the relevant files. Do they confirm or contradict the assumptions?
+- Check test coverage. Is the changed behavior tested?
+- Check for existing patterns. Does this change follow or break them?
+- Check cross-repo surface. Does this affect other repos?
+
+If the codebase answers the question, state what you found. Don't ask the operator to verify what you can verify yourself.
+
+### Step 3: Surface only what code can't resolve
+
+After self-answering, surface only the questions that require human judgment:
+- Design intent ("why this approach over X?")
+- Business logic ("does the product actually need this?")
+- User impact ("how does this affect the onboarding flow?")
+- Strategic tradeoffs ("is this the right time for this change?")
+
+This reduces dissent fatigue. Generic questions get ignored. Surgical questions based on code analysis earn attention.
+
+---
+
 ## Commands
 
 ### `dissent` (no args) or `dissent review`
 
-Review the current approach for concerns.
+Review the current approach for concerns using the surgical process above.
 
-1. Look at the current task, proposed changes, or recent conversation
-2. Check against all five conditions above
-3. If concerns found, raise using the format below
-4. If no concerns, say "No dissent. Approach looks clean."
+1. Trace the decision tree — identify every decision in the proposed change
+2. Self-answer from codebase — read files, check tests, verify assumptions from code
+3. Check against all five conditions (coupling, hardening, blast radius, scope creep, convention violation)
+4. Surface only concerns that code can't resolve
+5. If concerns found, raise using the format below
+6. If no concerns, say "No dissent. Approach looks clean."
 
 ### `dissent override`
 
@@ -115,6 +153,8 @@ If other kanly skills are installed, these work well together:
 - Dissent is overridden, risky approach taken → `/learn add` to record the decision
 - Dissent reveals scope creep → `/scope check` against project non-goals
 - Dissent about a spec violation → `/spec check` to verify
+- `/design review` triggers dissent on a spec before implementation begins
+- `/review check` can trigger dissent as part of cross-terminal review
 
 These are recommendations, not requirements. This skill works fully standalone.
 

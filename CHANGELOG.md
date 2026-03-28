@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] — 2026-03-28
+
+### Added
+
+- **`/design-gate`** — Hard gate on R1/R2 implementation without a design spec. No spec, no code. R0 exempt. Forces architecture decisions to be conscious before code starts.
+- **`/breakdown`** — File-level task breakdowns for R1/R2 changes. Concrete enough for another agent to execute without questions. No placeholders rule — every task specifies exact files, changes, and verification steps.
+- **`/review`** — Cross-terminal spec compliance and code quality review. After R1 changes ship, creates a review dispatch for another terminal to verify. Audit trail in vault/handoff system.
+- **`/test-gate`** — Test coverage requirement for R1 changes before marking complete. Not TDD — just "does a test exist that would catch a regression?" R2 adds to human review checklist. R0 exempt.
+- **`/verify`** — Evidence-based completion claims. No "should work now" — run the command, show the output, then claim success. Referenced by test-gate, review, and all completion workflows.
+
+### Changed
+
+- **`/dissent` upgraded to surgical dissent** — Now traces decision trees branch by branch and self-answers from codebase before surfacing concerns to the operator. Reduces dissent fatigue by only asking questions code can't resolve. The five original conditions (coupling, hardening, blast radius, scope creep, convention violation) remain as the detection layer.
+- README updated: seven → twelve protocols, new v2 pipeline diagram, updated flow diagram, new usage examples
+- CLAUDE_SNIPPET updated with new skill references and proactive triggers for all five new skills
+
 ## [0.2.0] — 2026-03-19
 
 ### Added

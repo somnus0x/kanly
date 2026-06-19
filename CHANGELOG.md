@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.1] — 2026-06-19
+
+### Changed
+
+- **Trimmed over-eager proactive triggers** on `guard`, `scope`, `spec`, `learn` so they stop auto-firing on routine work regardless of stakes. Protocol bodies unchanged — only *when they self-invoke*:
+  - `guard` — fires proactively ONLY on high-stakes/R2 domains (money, schema, contract storage/ABI, public API, auth); never on routine R0/R1 work.
+  - `scope` — on-demand only; no proactive plan-checking.
+  - `spec` — active only where `spec/SPEC.md` exists; never prompts otherwise. `spec check` also flags BINDING rules the code has drifted from.
+  - `learn` — `learn check` narrowed to "before debugging something that should-work-but-doesn't, or before a migration"; `learn add` still fires after non-obvious fixes.
+- `dissent` not trimmed here — superseded by the surgical-dissent rework in 0.3.0. `handoff` (team-mode retained) and `replace` untouched.
+
 ## [0.3.0] — 2026-03-28
 
 ### Added

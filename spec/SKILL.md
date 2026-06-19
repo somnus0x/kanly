@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Manage project specifications with BINDING and NON-BINDING sections. Use when user says "spec", wants to add/modify spec rules, or needs to check code against spec. Use proactively during plan review to verify proposed changes comply with BINDING spec sections (run `spec check`). Use proactively after implementing changes that establish new invariants to suggest binding them (run `spec bind`).
+description: Manage BINDING/NON-BINDING project specs in spec/SPEC.md. Active ONLY in a repo that has a spec/SPEC.md — never prompt for specs where none exists (pure overhead in repos that don't use formal specs). Use when user says "spec", to check code against BINDING rules, or to bind a new invariant. On `spec check`, also flag any BINDING rule the code has already drifted away from (stale spec).
 argument-hint: [bind <rule>|note <observation>|check|diff]
 ---
 

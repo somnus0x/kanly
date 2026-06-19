@@ -1,6 +1,6 @@
 ---
 name: guard
-description: Classify how reversible a code change is before applying it. Use before non-trivial changes, or when user says "guard", "classify", "reversibility", "blast radius", "trace", "what calls this", "is this dead", "verify removal", or when changes touch database schemas, money/payment logic, smart contracts, public APIs, or auth flows. These are high-risk domains where mistakes are hard to undo. Use proactively when planning implementation (plan mode) to classify all proposed changes before finalizing the plan. Use proactively before committing non-trivial changes to scan for R2 territory. Use `trace` before changing any function/type/endpoint to map blast radius. Use `verify` after removing or replacing code to confirm the old path is dead.
+description: Classify how reversible a change is, gated on high-stakes domains. Use when user says "guard", "classify", "reversibility", "blast radius", "trace", "what calls this", "is this dead", "verify removal", OR when a change touches a money/payment flow, database schema, smart-contract storage/ABI, public API shape, or auth flow — the hard-to-undo domains. Fire proactively ONLY for those R2 domains, never on routine R0/R1 work (renames, CSS, logging, internal refactors). Use `trace` to map blast radius before changing an exported symbol/endpoint; use `verify` after a removal/replacement to confirm the old path is dead.
 argument-hint: [classify|check|tripwire|trace|verify]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: scope
-description: Manage project non-goals and scope boundaries. Use when user says "scope", "non-goal", "out of scope", or when current work might be drifting beyond what the project intends to build. Helps teams stay focused by declaring what they are NOT building. Use proactively during planning to check proposed work against declared non-goals before finalizing the plan (run `scope check`).
+description: Manage a project's declared non-goals (what it explicitly will NOT build), stored in spec/NON_GOALS.md. On-demand only — use when user says "scope", "non-goal", "out of scope". Do not proactively check plans against non-goals; invoke by name to declare or review a scope boundary.
 argument-hint: [add <non-goal>|check|list]
 ---
 

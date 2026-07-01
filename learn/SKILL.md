@@ -53,7 +53,7 @@ Key takeaway: <one-line summary of what to remember>
 Before working in a domain, check if there are known gotchas.
 
 1. Read `docs/LEARNINGS.md`
-2. Find all entries matching the domain keyword (fuzzy match — "auth" matches "Auth", "Authentication", "Privy Auth")
+2. Find all entries matching the domain keyword (fuzzy match — "auth" matches "Auth", "Authentication", "OAuth")
 3. Summarize relevant learnings as warnings
 4. If nothing matches, say "No known gotchas for <domain>."
 

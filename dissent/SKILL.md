@@ -189,7 +189,7 @@ SAFER ALTERNATIVE: Keep the event pattern. Emit a payment_completed event, let n
 ```
 DISSENT: Hardcoding the token address removes configurability
 
-- Currently reads from env var — works across testnet/mainnet
+- Currently reads from env var — works across staging/prod
 - Hardcoding means a contract redeploy requires a code change + release
 
 SAFER ALTERNATIVE: Keep the env var. Add the address as a fallback default only.

@@ -177,7 +177,7 @@ Want to customize triggers? See `CLAUDE_SNIPPET.md` for optional CLAUDE.md overr
 
 # ── Team mode (in-repo, committed to git) ──
 <repo>/.claude/handoffs/
-  isagi--frontend-team.md      # isagi → frontend team
+  alice--frontend-team.md      # alice → frontend team
   alice--bob.md                # alice → bob
   bob--all.md                  # bob → everyone
 

@@ -35,11 +35,11 @@ Write a dispatch. Target is a repo name (solo) or person/team (team mode).
 1. Write to `~/.claude/handoffs/<target>.md`
 
 **Team mode:**
-1. Determine author from git config: `git config user.name` → kebab-case (e.g., "isagi")
+1. Determine author from git config: `git config user.name` → kebab-case (e.g., "alice")
 2. Write to `<repo>/.claude/handoffs/<author>--<target>.md`
    - `<author>` = who wrote it
    - `<target>` = who it's for (person, team, or "all")
-   - Example: `isagi--frontend-team.md`, `alice--bob.md`, `isagi--all.md`
+   - Example: `alice--frontend-team.md`, `alice--bob.md`, `alice--all.md`
 3. After writing, suggest committing the handoff file.
 
 **Format (both modes):**
@@ -108,19 +108,19 @@ Check if the current codebase matches the API contract declared in a handoff dis
 HANDOFF VERIFY: <dispatch title>
 
 MATCH (N):
-  ✓ POST /deposit/create-intent — route, body, response all match
+  ✓ POST /orders/create — route, body, response all match
 
 DRIFT (N):
-  ✗ GET /bets — declared response: BetDocument[], actual: { bets: BetDocument[], count: number }
+  ✗ GET /items — declared response: Item[], actual: { items: Item[], count: number }
     Location: <file:line>
     Handoff says: flat array
     Code says: wrapped object
 
 MISSING (N):
-  ? POST /deposit/testnet — declared in handoff but no route found in codebase
+  ? POST /orders/sync — declared in handoff but no route found in codebase
 
 UNDOCUMENTED (N):
-  + DELETE /bets/:id — exists in code but not in any handoff
+  + DELETE /items/:id — exists in code but not in any handoff
 
 VERDICT: <N match, N drift, N missing, N undocumented>
 ```
@@ -159,7 +159,7 @@ Add to `.gitignore` if you do NOT want handoffs committed (rare — defeats the 
 
 ```
 .claude/handoffs/
-  isagi--frontend-team.md     # isagi → frontend team
+  alice--frontend-team.md     # alice → frontend team
   alice--bob.md               # alice → bob specifically
   bob--all.md                 # bob → everyone
 ```

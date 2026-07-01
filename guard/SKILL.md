@@ -137,7 +137,7 @@ These domains are **always R2** — any change here triggers the full safety gat
 
 ### Money & Value
 - Token amounts, decimal handling, unit conversions
-- Deposit/withdrawal flows, balance calculations
+- Payment flows, balance calculations
 - Fee structures, pricing logic, settlement/payout logic
 
 ### Data & Schema

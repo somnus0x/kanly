@@ -121,9 +121,9 @@ MIGRATION MAP:
 
 | Consumer | Old source | New source | Status |
 |---|---|---|---|
-| Home feed | Firestore onSnapshot | GET /bets?limit=5 | ✓ migrated |
-| Profile page | Firestore query | GET /bets/me | ✓ migrated |
-| Footer ticker | Firestore onSnapshot | GET /bets?limit=10 (polled) | ✗ pending |
+| Home feed | Firestore onSnapshot | GET /items?limit=5 | ✓ migrated |
+| Profile page | Firestore query | GET /items/me | ✓ migrated |
+| Footer ticker | Firestore onSnapshot | GET /items?limit=10 (polled) | ✗ pending |
 
 Remaining: N consumers not yet migrated
 ```

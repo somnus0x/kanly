@@ -2,14 +2,15 @@
 
 > *"Kanly — the rules of vendetta under the Great Convention. The formal feud or war of assassins between Great Houses."*
 
-Multi-repo governance toolkit for Claude Code. Twelve protocols governing how parallel sessions coordinate, what gets built, what doesn't, and when to push back — like the Great Convention governs how Houses interact.
+Multi-repo governance toolkit for Claude Code. Thirteen protocols governing how parallel sessions coordinate, what gets built, what doesn't, and when to push back — like the Great Convention governs how Houses interact.
 
-## The Twelve Protocols
+## The Thirteen Protocols
 
 | Skill | Dune Analog | What it does |
 |---|---|---|
 | `/handoff` | **Dispatches** | Pass context between repos/sessions. What changed, what the other house needs to do. Verify API contracts against code. |
 | `/spec` | **Treaties** | Manage SPEC.md with BINDING (ratified treaties) vs NON-BINDING (proposals). Approval gates on BINDING changes. |
+| `/contract` | **The Binding** | Declare named, testable exit assertions before an autonomous loop runs. No green-able exit contract, no autonomous run. Task-scoped complement to `/spec`. |
 | `/scope` | **Exclusion zones** | Manage NON_GOALS.md. Declare what's out of scope. Check if current work drifts into forbidden territory. |
 | `/learn` | **The Spice** | Capture engineering learnings, gotchas, and migration patterns. Knowledge that must flow between sessions. |
 | `/guard` | **The Gom Jabbar** | Classify change reversibility (R0/R1/R2). Map blast radius. Verify dead code. Enforce safety gates before the point of no return. |
@@ -24,13 +25,13 @@ Multi-repo governance toolkit for Claude Code. Twelve protocols governing how pa
 ## Install
 
 ```bash
-# All twelve protocols
-for skill in handoff spec scope learn guard dissent replace design-gate breakdown review test-gate verify; do
+# All thirteen protocols
+for skill in handoff spec contract scope learn guard dissent replace design-gate breakdown review test-gate verify; do
   cp -r kanly/$skill ~/.claude/skills/$skill
 done
 
 # Or symlink for development
-for skill in handoff spec scope learn guard dissent replace design-gate breakdown review test-gate verify; do
+for skill in handoff spec contract scope learn guard dissent replace design-gate breakdown review test-gate verify; do
   ln -s $(pwd)/kanly/$skill ~/.claude/skills/$skill
 done
 ```
@@ -49,6 +50,11 @@ done
 /spec note "Consider batch settlement for gas efficiency"
 /spec check                    # Verify code against BINDING specs
 /spec diff                     # What changed in spec since last commit
+
+# ── Contract: exit assertions for autonomous loops ──
+/contract declare "build X"    # Name testable exit assertions before the loop runs
+/contract check                # Run the assertions, report pass/fail
+/contract close                # Gate completion — all assertions must be green
 
 # ── Scope: non-goals exclusion zones ──
 /scope add "Mobile native app — web-only for now"

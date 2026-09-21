@@ -1,5 +1,24 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- **BREAKING (vocabulary): R0 and R2 swapped to match the operator's CLAUDE.md RULE 9.**
+  Behaviour is unchanged; only the labels move.
+  - `R0` was *fully reversible* and is now **irreversible / hard to reverse — STOP and get approval**.
+  - `R1` is unchanged — *costly to reverse*.
+  - `R2` was *hard or impossible to reverse* and is now **easily reversed — move fast, no gate**.
+
+  Why: kanly and CLAUDE.md defined the same three tokens as exact opposites while loading into
+  the same Claude Code session. Each was internally consistent, so neither looked wrong alone.
+  The hazard was the label crossing a boundary — which is kanly's entire job. A `/handoff`
+  dispatch reading "this is R2" meant *stop, hard to reverse* to kanly and *easily reversed,
+  just do it* to CLAUDE.md. No incident is on record; this was fixed as a latent hazard.
+
+  **If you installed skills before this release, re-copy them.** A mixed install is worse than
+  either convention on its own.
+
 ## [0.3.1] — 2026-06-19
 
 ### Changed

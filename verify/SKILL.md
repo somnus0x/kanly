@@ -99,6 +99,6 @@ If any of these appear in a draft response, verification is missing:
 - After `/test-gate` confirms tests exist → `verify run` to prove they pass
 - After `/review` checks spec compliance → `verify run` on the test suite
 - Before claiming a `/replace` is complete → `verify` the old path is dead
-- After any `/guard` R2 change lands → `verify` the behavior is correct
+- After any `/guard` R0 change lands → `verify` the behavior is correct
 
 This skill is referenced by most other kanly skills as the final completion step.

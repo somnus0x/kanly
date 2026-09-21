@@ -1,12 +1,12 @@
 ---
 name: breakdown
-description: Create file-level task breakdowns for non-trivial changes. Use when planning R1 or R2 implementation, or when user says "breakdown", "task plan", "what files change", "implementation plan". Use proactively after a design spec is approved and before implementation begins. Do NOT use for R0 changes.
+description: Create file-level task breakdowns for non-trivial changes. Use when planning R1 or R0 implementation, or when user says "breakdown", "task plan", "what files change", "implementation plan". Use proactively after a design spec is approved and before implementation begins. Do NOT use for R2 changes.
 argument-hint: [write|view|validate]
 ---
 
 # Breakdown — File-Level Task Plans
 
-Break R1/R2 work into concrete, dispatchable tasks before touching code. Not 2-minute micro-steps — file-level plans that another agent could execute without asking questions.
+Break R0/R1 work into concrete, dispatchable tasks before touching code. Not 2-minute micro-steps — file-level plans that another agent could execute without asking questions.
 
 ---
 
@@ -18,9 +18,9 @@ When a feature touches multiple files, the agent makes scope decisions on the fl
 
 | Reversibility | Breakdown? | Why |
 |---|---|---|
-| **R0** | No | Small enough to hold in your head |
+| **R2** | No | Small enough to hold in your head |
 | **R1** | **Yes** | Multiple files, dependencies between changes, worth planning |
-| **R2** | **Yes** | Critical changes — every file touch should be deliberate |
+| **R0** | **Yes** | Critical changes — every file touch should be deliberate |
 
 ---
 
@@ -43,7 +43,7 @@ Create a task breakdown for the current work.
 # Breakdown: <Feature Name>
 **Spec:** <link to design spec>
 **Date:** <today>
-**Reversibility:** R1/R2
+**Reversibility:** R0/R1
 
 ## Tasks (in order)
 
@@ -107,7 +107,7 @@ Every task in the breakdown must be concrete enough that another agent — with 
 - **No placeholders.** If you can't describe the change concretely, the spec isn't detailed enough. Go back to `/design write`.
 - **Verification per task.** Every task has a "how to confirm it's correct" step.
 - **Breakdowns are dispatchable.** Another terminal should be able to pick up a task and execute it from the breakdown alone.
-- **R0 is exempt.** Don't create breakdowns for trivial changes.
+- **R2 is exempt.** Don't create breakdowns for trivial changes.
 
 ---
 

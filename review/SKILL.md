@@ -1,6 +1,6 @@
 ---
 name: review
-description: Cross-terminal spec compliance and code quality review for R1/R2 changes. Use after an R1 or R2 change ships, or when user says "review", "cross-terminal review", "spec compliance", "check this change". Use proactively after R1 changes land to suggest writing a review dispatch. Creates audit trail in vault or handoff system.
+description: Cross-terminal spec compliance and code quality review for R0/R1 changes. Use after an R1 or R0 change ships, or when user says "review", "cross-terminal review", "spec compliance", "check this change". Use proactively after R1 changes land to suggest writing a review dispatch. Creates audit trail in vault or handoff system.
 argument-hint: [write|check|done]
 ---
 
@@ -20,9 +20,9 @@ The reviewing terminal gets: the spec, the diff, and a structured check. It's no
 
 | Reversibility | Review? | Why |
 |---|---|---|
-| **R0** | No | Too small to justify |
+| **R2** | No | Too small to justify |
 | **R1** | **Yes** | Costly to reverse — worth a second check |
-| **R2** | **Optional** | Already requires human approval via `/guard`. Review adds value but R2 is already gated. |
+| **R0** | **Optional** | Already requires human approval via `/guard`. Review adds value but R0 is already gated. |
 
 ---
 
@@ -130,7 +130,7 @@ A bad review is:
 
 - **Different context reviews.** The reviewing terminal should have fresh context, not the build context. That's why this is a dispatch, not a self-review.
 - **Spec is the standard.** The review checks against the spec, not against the reviewer's preferences. If the code matches the spec and the spec is wrong, fix the spec.
-- **R1 only by default.** Don't create review overhead for R0 changes. R2 already has human-in-the-loop via `/guard`.
+- **R1 only by default.** Don't create review overhead for R2 changes. R0 already has human-in-the-loop via `/guard`.
 - **Review is a conversation, not a gate.** Concerns are surfaced, not blocking. The author terminal decides how to address them.
 - **Audit trail matters.** Save review summaries. They're useful for retros and pattern detection.
 

@@ -1,6 +1,6 @@
 ---
 name: test-gate
-description: Enforce test coverage for non-trivial changes before completion. Use when R1 or R2 changes are about to be marked complete, or when user says "test gate", "are there tests", "test coverage", "test check". Use proactively before commits on R1/R2 changes to verify test coverage exists. Do NOT enforce for R0 changes.
+description: Enforce test coverage for non-trivial changes before completion. Use when R1 or R0 changes are about to be marked complete, or when user says "test gate", "are there tests", "test coverage", "test check". Use proactively before commits on R0/R1 changes to verify test coverage exists. Do NOT enforce for R2 changes.
 argument-hint: [check|run|gate]
 ---
 
@@ -18,9 +18,9 @@ Tests happen when they happen — which means they often don't happen. This skil
 
 | Reversibility | Test required? | What's checked |
 |---|---|---|
-| **R0** | No | Move fast |
+| **R2** | No | Move fast |
 | **R1** | **Yes** | At least one test covering the changed behavior |
-| **R2** | **Checklist** | Add "are there tests?" to the human review checklist. Not auto-enforced — R2 already requires explicit approval. |
+| **R0** | **Checklist** | Add "are there tests?" to the human review checklist. Not auto-enforced — R0 already requires explicit approval. |
 
 ---
 
@@ -93,8 +93,8 @@ A test does NOT cover the changed behavior if:
 
 - **One test minimum for R1.** Not zero, not full coverage. One real test that exercises the changed behavior.
 - **The test must be meaningful.** A test that always passes regardless of the implementation is not a test.
-- **R0 is exempt.** Don't slow down trivial changes with test requirements.
-- **R2 is a checklist item, not a gate.** R2 changes already go through human review via `/guard`. Add "are there tests?" to that conversation, but don't auto-block.
+- **R2 is exempt.** Don't slow down trivial changes with test requirements.
+- **R0 is a checklist item, not a gate.** R0 changes already go through human review via `/guard`. Add "are there tests?" to that conversation, but don't auto-block.
 - **Override is fine.** If the operator says "ship without tests," respect it. Log the decision via `/learn add`.
 - **Show the output.** Use `/verify run` to prove the tests pass. "Tests pass" without output is not verified.
 
@@ -102,7 +102,7 @@ A test does NOT cover the changed behavior if:
 
 ## Optional Integration
 
-- Before `test gate` → `/guard classify` to confirm R1/R2
+- Before `test gate` → `/guard classify` to confirm R0/R1
 - After tests written → `/verify run` to prove they pass
 - If test reveals a gotcha → `/learn add`
 - After test gate passes → `/review write` to create a review dispatch

@@ -1,6 +1,6 @@
 ---
 name: design-gate
-description: Enforce design-before-code for non-trivial changes. Use before any R1 or R2 change, or when user says "design", "spec first", "what's the plan", or when implementation starts without a written spec. Use proactively when you detect code being written for an R1/R2 change that has no corresponding spec document. Do NOT gate R0 changes — they move fast by definition.
+description: Enforce design-before-code for non-trivial changes. Use before any R1 or R0 change, or when user says "design", "spec first", "what's the plan", or when implementation starts without a written spec. Use proactively when you detect code being written for an R0/R1 change that has no corresponding spec document. Do NOT gate R2 changes — they move fast by definition.
 argument-hint: [write|check|review]
 ---
 
@@ -20,9 +20,9 @@ Not a 20-page design doc. Three sentences is fine for small changes. The point i
 
 | Reversibility | Gate? | Why |
 |---|---|---|
-| **R0** (fully reversible) | No | CSS tweaks, logging, renames — just do it |
+| **R2** (fully reversible) | No | CSS tweaks, logging, renames — just do it |
 | **R1** (costly to reverse) | **Yes** | Config changes, dependency upgrades, new endpoints — write 3 sentences minimum |
-| **R2** (hard to reverse) | **Yes** | Schema, contracts, money flows — full design doc with failure modes |
+| **R0** (hard to reverse) | **Yes** | Schema, contracts, money flows — full design doc with failure modes |
 
 **The anti-pattern this kills:** "This is too simple to need a design." That's where unexamined assumptions cause the most rework.
 
@@ -35,8 +35,8 @@ Not a 20-page design doc. Three sentences is fine for small changes. The point i
 Create or append to a spec for the current work.
 
 1. Determine the scope of the current change
-2. Run `/guard classify` to confirm R1 or R2
-3. If R0, say "R0 — no gate needed. Proceed." and stop.
+2. Run `/guard classify` to confirm R1 or R0
+3. If R2, say "R2 — no gate needed. Proceed." and stop.
 4. Write a spec appropriate to the reversibility:
 
 **R1 spec (minimum 3 sentences):**
@@ -50,10 +50,10 @@ Create or append to a spec for the current work.
 **Touches:** <files/systems affected>
 ```
 
-**R2 spec (full design):**
+**R0 spec (full design):**
 ```markdown
 ## <Feature/Change Name>
-**Reversibility:** R2
+**Reversibility:** R0
 **Date:** <today>
 
 **What:** <what's changing>
@@ -77,8 +77,8 @@ Verify a spec exists for the current work before implementation starts.
 
 1. Identify what's being built (from conversation context or current task)
 2. Run `/guard classify` on the proposed change
-3. If R0 — "No gate. Proceed."
-4. If R1/R2 — search for a matching spec:
+3. If R2 — "No gate. Proceed."
+4. If R0/R1 — search for a matching spec:
    - Check `spec/designs/` for recent specs matching the topic
    - Check conversation history for an approved design
 5. Report:
@@ -101,18 +101,18 @@ Run dissent on an existing spec before implementation begins.
 
 This skill should auto-fire when:
 
-- Code is about to be written for an R1/R2 change and no spec exists
+- Code is about to be written for an R0/R1 change and no spec exists
 - A plan is being discussed without a written spec
 - Implementation starts with "let's just build it" energy on non-trivial work
 
-**How to detect:** If the conversation moves toward implementation (file edits, code generation) and `/guard classify` would tag the work as R1/R2, check for a spec first.
+**How to detect:** If the conversation moves toward implementation (file edits, code generation) and `/guard classify` would tag the work as R0/R1, check for a spec first.
 
 ---
 
 ## Rules
 
 - **Three sentences minimum for R1.** Not zero, not a novel. Three sentences that capture what, why, and what it touches.
-- **R0 is always exempt.** Never slow down trivial changes with design gates.
+- **R2 is always exempt.** Never slow down trivial changes with design gates.
 - **The spec lives in a file, not in conversation.** Persistent, reviewable, dispatchable to other terminals.
 - **Stale specs are worse than no specs.** A spec written 3 weeks ago with shifted assumptions gives false confidence. Flag staleness.
 - **Design gate is a service, not bureaucracy.** If the operator says "skip the gate," respect the override — but log it.

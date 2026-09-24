@@ -11,12 +11,12 @@
 
 ## Proactive Checks (customize defaults)
 
-Before R1/R2 implementation:
+Before R0/R1 implementation:
 - Run `/design check` to verify a spec exists. If not, run `/design write` before touching code.
 - Run `/breakdown write` to create a file-level task plan.
 
 Before non-trivial changes:
-- Run `/guard classify` to tag reversibility. If R1/R2, run `/dissent review` on the approach.
+- Run `/guard classify` to tag reversibility. If R0/R1, run `/dissent review` on the approach.
 - Run `/guard trace` to map blast radius before changing any exported symbol, endpoint, or type.
 
 Before working in a domain:
@@ -53,8 +53,8 @@ Before any completion claim:
 - `/guard` — R0/R1/R2 reversibility gates (classify, check, tripwire, trace, verify)
 - `/dissent` — surgical disagreement with decision-tree traversal (review, override, log)
 - `/replace` — kill-and-prove replacement protocol
-- `/design-gate` — spec-before-code gate for R1/R2 (write, check, review)
-- `/breakdown` — file-level task plans for R1/R2 (write, view, validate)
+- `/design-gate` — spec-before-code gate for R0/R1 (write, check, review)
+- `/breakdown` — file-level task plans for R0/R1 (write, view, validate)
 - `/review` — cross-terminal spec compliance review (write, check, done)
 - `/test-gate` — test coverage gate for R1 (check, run, gate)
 - `/verify` — evidence-based completion (run, status)

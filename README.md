@@ -16,8 +16,8 @@ Multi-repo governance toolkit for Claude Code. Thirteen protocols governing how 
 | `/guard` | **The Gom Jabbar** | Classify change reversibility (R0/R1/R2). Map blast radius. Verify dead code. Enforce safety gates before the point of no return. |
 | `/dissent` | **Truthsayer** | Surgical dissent — trace decision trees, self-answer from codebase, surface only what code can't resolve. |
 | `/replace` | **Kanly itself** | Kill-and-prove protocol for full replacements. The old path must become provably dead. |
-| `/design-gate` | **The Litany** | No spec, no code. Hard gate on R1/R2 implementation without a design. Forces the decision to be conscious. |
-| `/breakdown` | **Battle Plans** | File-level task breakdowns for R1/R2 changes. Concrete enough for another agent to execute without questions. |
+| `/design-gate` | **The Litany** | No spec, no code. Hard gate on R0/R1 implementation without a design. Forces the decision to be conscious. |
+| `/breakdown` | **Battle Plans** | File-level task breakdowns for R0/R1 changes. Concrete enough for another agent to execute without questions. |
 | `/review` | **The Council** | Cross-terminal spec compliance and code quality review. The agent that built it shouldn't be the only one who checks it. |
 | `/test-gate` | **The Trial** | Tests required before R1 changes are marked complete. Not TDD — just proof the change is testable and tested. |
 | `/verify` | **The Proof** | No completion claims without fresh verification evidence. Run the command, show the output, then claim success. |
@@ -68,8 +68,8 @@ done
 
 # ── Guard: reversibility gates ──
 /guard classify                # Tag current change as R0/R1/R2
-/guard check                   # Scan staged changes for R2 territory
-/guard tripwire                # Show all R2 domains for this project
+/guard check                   # Scan staged changes for R0 territory
+/guard tripwire                # Show all R0 domains for this project
 /guard trace <symbol>          # Map blast radius before changing something
 /guard verify <symbol>         # Verify removed code is actually dead
 
@@ -112,18 +112,18 @@ done
 
 | Class | Meaning | Protocol |
 |---|---|---|
-| **R0** | Fully reversible | Move fast. No gate. |
+| **R2** | Fully reversible | Move fast. No gate. |
 | **R1** | Costly to reverse | Note it. Mention in commit. |
-| **R2** | Hard to reverse | **STOP.** List failure modes. Ask approval. |
+| **R0** | Hard to reverse | **STOP.** List failure modes. Ask approval. |
 
-R2 triggers: schemas, money flows, contract deploys, public API changes, auth flow changes.
+R0 triggers: schemas, money flows, contract deploys, public API changes, auth flow changes.
 
 ## The v2 Pipeline
 
-New in v0.3.0 — five skills that enforce planning discipline and evidence-based completion. All gated by reversibility class. R0 stays fast. R1/R2 get the friction they deserve.
+New in v0.3.0 — five skills that enforce planning discipline and evidence-based completion. All gated by reversibility class. R2 stays fast. R0/R1 get the friction they deserve.
 
 ```
-         /design-gate ← spec must exist for R1/R2
+         /design-gate ← spec must exist for R0/R1
               │
               ▼
          /breakdown ← file-level task plan
@@ -147,15 +147,15 @@ Kanly skills auto-fire at the right moments — no CLAUDE.md snippet required:
 
 | Skill | Auto-fires when... |
 |---|---|
-| `/guard` | Plan mode (classify changes), before commits (scan for R2), before changing exports (trace), after deletions (verify) |
+| `/guard` | Plan mode (classify changes), before commits (scan for R0), before changing exports (trace), after deletions (verify) |
 | `/dissent` | Before finalizing any plan (surgical review — reads codebase first, surfaces only unresolvable questions) |
 | `/replace` | When message starts with `REPLACE:` or intent is full replacement |
 | `/spec` | During plan review (check BINDING compliance) |
 | `/scope` | During planning (check for scope drift) |
 | `/learn` | Starting work in a domain (surface gotchas) |
 | `/handoff` | Session start (check dispatches), after cross-repo changes |
-| `/design-gate` | Before R1/R2 implementation starts (check spec exists) |
-| `/breakdown` | After design spec approved, before R1/R2 implementation |
+| `/design-gate` | Before R0/R1 implementation starts (check spec exists) |
+| `/breakdown` | After design spec approved, before R0/R1 implementation |
 | `/test-gate` | Before R1 changes are marked complete |
 | `/verify` | Before any completion claim |
 | `/review` | After R1 changes ship (suggest review dispatch) |
@@ -170,7 +170,7 @@ Want to customize triggers? See `CLAUDE_SNIPPET.md` for optional CLAUDE.md overr
 - **Async coordination.** Sessions don't need to be running simultaneously.
 - **Governance, not bureaucracy.** The point is intentionality, not paperwork.
 - **Zero config.** Skills self-trigger — no CLAUDE.md wiring needed.
-- **Reversibility-aware.** R0 stays fast. Friction scales with blast radius.
+- **Reversibility-aware.** R2 stays fast. Friction scales with blast radius.
 - **Self-answering.** Agents check the codebase before asking the operator. Fewer questions, higher signal.
 
 ## File Layout
@@ -208,11 +208,11 @@ Want to customize triggers? See `CLAUDE_SNIPPET.md` for optional CLAUDE.md overr
               │
          /guard classify
               │
-         R0? R1? R2?
+         R2? R1? R0?
               │
    ┌──────────┼──────────┐
    │          │          │
-R0: go     R1: note   R2: STOP
+R2: go     R1: note   R0: STOP
               │          │
               │    List failure modes
               │    Ask approval

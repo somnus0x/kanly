@@ -1,6 +1,6 @@
 ---
 name: guard
-description: Classify how reversible a change is, gated on high-stakes domains. Use when user says "guard", "classify", "reversibility", "blast radius", "trace", "what calls this", "is this dead", "verify removal", OR when a change touches a money/payment flow, database schema, smart-contract storage/ABI, public API shape, or auth flow — the hard-to-undo domains. Fire proactively ONLY for those R2 domains, never on routine R0/R1 work (renames, CSS, logging, internal refactors). Use `trace` to map blast radius before changing an exported symbol/endpoint; use `verify` after a removal/replacement to confirm the old path is dead.
+description: Classify how reversible a change is, gated on high-stakes domains. Use when user says "guard", "classify", "reversibility", "blast radius", "trace", "what calls this", "is this dead", "verify removal", OR when a change touches a money/payment flow, database schema, smart-contract storage/ABI, public API shape, auth flow, a production bot's public output, a production promotion, secrets, or shared git history — the hard-to-undo domains. Fire proactively ONLY for those R0 domains, never on routine R1/R2 work (renames, CSS, logging, internal refactors). Use `trace` to map blast radius before changing an exported symbol/endpoint; use `verify` after a removal/replacement to confirm the old path is dead.
 argument-hint: [classify|check|tripwire|trace|verify]
 ---
 
@@ -18,9 +18,9 @@ Software changes vary in how easily they can be undone. A CSS tweak is trivial t
 
 | Class | Meaning | Examples | Protocol |
 |---|---|---|---|
-| **R0** | Fully reversible | Rename variable, CSS tweak, add logging, refactor internal function | Move fast. No gate needed. |
+| **R0** | Hard or impossible to reverse | Schema migration, money flow change, contract deploy, public API shape change, auth flow change, production promotion, secret reseal, force-push or moved tag, what a production bot posts | **STOP.** List what goes wrong if this is wrong. Get explicit approval before proceeding. |
 | **R1** | Costly to reverse | Config change, dependency upgrade, feature flag toggle, new DB index | Note it in the commit message. |
-| **R2** | Hard or impossible to reverse | Schema migration, money flow change, contract deploy, public API shape change, auth flow change | **STOP.** List what goes wrong if this is wrong. Get explicit approval before proceeding. |
+| **R2** | Fully reversible | Rename variable, CSS tweak, add logging, refactor internal function | Move fast. No gate needed. |
 
 ---
 
@@ -31,8 +31,8 @@ Software changes vary in how easily they can be undone. A CSS tweak is trivial t
 Classify the current change's reversibility before applying it.
 
 1. Look at what's about to change (staged files, current diff, or described change)
-2. Check each file/change against the R2 tripwire domains (see below)
-3. Assign R0, R1, or R2 with reasoning
+2. Check each file/change against the R0 tripwire domains (see below)
+3. Assign R1, R2, or R0 with reasoning
 4. Output the classification tag
 
 **Output format:**
@@ -42,26 +42,26 @@ Classify the current change's reversibility before applying it.
 
 Examples:
 ```
-**R0** (ui) — CSS color change, fully reversible
+**R2** (ui) — CSS color change, fully reversible
 **R1** (dependency) — Upgrading viem from 2.33 to 2.34, rollback possible but costly
-**R2** (schema) — Adding required field to user documents, existing records won't have it
+**R0** (schema) — Adding required field to user documents, existing records won't have it
 ```
 
 ### `guard check`
 
-Scan current changes for R2 territory. Run before committing.
+Scan current changes for R0 territory. Run before committing.
 
 1. Check `git diff --staged` (or `git diff` if nothing staged)
 2. For each changed file, check against tripwire domains
 3. Report:
-   - **Clear** — no R2 territory detected
+   - **Clear** — no R0 territory detected
    - **Warning** — R1 changes detected, listed with reasoning
-   - **R2 STOP** — hard-to-reverse changes detected. List each with:
+   - **R0 STOP** — hard-to-reverse changes detected. List each with:
      - What's changing
-     - Why it's R2
+     - Why it's R0
      - Failure modes (what goes wrong if this is wrong)
      - Minimal safe approach (if any)
-4. If R2 detected, **do not proceed without explicit user approval**
+4. If R0 detected, **do not proceed without explicit user approval**
 
 ### `guard trace <symbol>`
 
@@ -92,7 +92,7 @@ Cross-repo exposure: <yes/no — why>
 Risk: R<N> — <based on blast radius size + exposure>
 ```
 
-If blast radius is large (>10 callers) or crosses repo boundaries, auto-classify as R1+. If it touches money/schema/auth domains, auto-classify as R2.
+If blast radius is large (>10 callers) or crosses repo boundaries, auto-classify as R1+. If it touches money/schema/auth domains, auto-classify as R0.
 
 ### `guard verify`
 
@@ -122,18 +122,18 @@ Verdict: <safe to remove | still live at N locations | comments-only, clean up>
 
 ### `guard tripwire`
 
-Show the R2 tripwire domains for this project.
+Show the R0 tripwire domains for this project.
 
-1. List all default R2 domains (see below)
-2. If `spec/R2_DOMAINS.md` exists, merge project-specific domains
+1. List all default R0 domains (see below)
+2. If `spec/R0_DOMAINS.md` exists, merge project-specific domains
 3. Check if any are relevant to recent work (last 5 commits)
-4. Flag any that have been touched without R2 classification
+4. Flag any that have been touched without R0 classification
 
 ---
 
-## R2 Tripwire Domains
+## R0 Tripwire Domains
 
-These domains are **always R2** — any change here triggers the full safety gate:
+These domains are **always R0** — any change here triggers the full safety gate:
 
 ### Money & Value
 - Token amounts, decimal handling, unit conversions
@@ -161,17 +161,29 @@ These domains are **always R2** — any change here triggers the full safety gat
 - Database connection config, CI/CD pipeline changes
 - Docker base image changes, resource limits, health check paths
 
+### Public Bot Behavior
+- What a production bot posts, replies or DMs in public, and the flags or keywords that change it (rails on/off, judge keyword, handle)
+
+### Releases & Promotion
+- Promotion of an image or config to a production environment (mainnet-prod); staging promotions are R1
+
+### Secrets
+- Sealing or resealing secrets, credential values in env or config; the operator does these, the agent prepares them
+
+### Git History
+- Force-push, moving or deleting a tag, rewriting a shared branch; a fix is a new commit or a new tag
+
 ### Project-Specific Domains
-If `spec/R2_DOMAINS.md` exists in the project root, read it and merge with the defaults above. This lets each project define additional R2 domains specific to its domain.
+If `spec/R0_DOMAINS.md` exists in the project root, read it and merge with the defaults above. This lets each project define additional R0 domains specific to its domain.
 
 ---
 
 ## Optional Integration
 
 If other kanly skills are installed, these work well together:
-- After R2 is flagged → `/spec bind` if a new spec rule is needed
+- After R0 is flagged → `/spec bind` if a new spec rule is needed
 - After a non-obvious fix → `/learn add` to capture the gotcha
-- If R2 change affects another repo/person → `/handoff write`
+- If R0 change affects another repo/person → `/handoff write`
 - After `guard trace` shows cross-repo exposure → `/handoff write` to notify consumers
 - After `guard verify` shows ALIVE → fix references before proceeding
 - Before `REPLACE:` protocol → `guard trace` first to map blast radius, `guard verify` after to confirm kill
@@ -182,8 +194,8 @@ These are recommendations, not requirements. This skill works fully standalone.
 
 ## Rules
 
-- **R2 is a conversation, not a blocker** — the point is intentional decisions, not preventing changes
+- **R0 is a conversation, not a blocker** — the point is intentional decisions, not preventing changes
 - **Classify early** — tag reversibility when planning, not after coding
-- **Failure modes required for R2** — "what goes wrong if this is wrong?" must be answered
-- **Minimal safe approach** — always propose the smallest version of an R2 change
-- **No silent R2** — if you notice an R2 change that wasn't classified, flag it immediately
+- **Failure modes required for R0** — "what goes wrong if this is wrong?" must be answered
+- **Minimal safe approach** — always propose the smallest version of an R0 change
+- **No silent R0** — if you notice an R0 change that wasn't classified, flag it immediately

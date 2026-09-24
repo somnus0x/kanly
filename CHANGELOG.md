@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **dissent**: two lines still applied the reversible tier's old label after the swap ("no debate on R0 decisions, if it's easily reversed"). They now say R2, matching guard's table.
+
+### Added
+
+- **guard**: four R0 tripwire domains taken from operator usage: public bot behavior, releases and promotion to production, secrets, and git history (force-push, moved tags). Staging promotions are called out as R1.
+
 ### Changed
 
 - **BREAKING (vocabulary): R0 and R2 swapped to match the operator's CLAUDE.md RULE 9.**

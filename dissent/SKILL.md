@@ -78,7 +78,7 @@ Structured debate activates when:
 - Multiple valid approaches exist and the tradeoffs aren't obvious
 - The operator explicitly asks: `dissent debate`
 
-Do NOT use structured debate for R0 decisions. Single-shot dissent is enough.
+Do NOT use structured debate for R2 decisions. Single-shot dissent is enough.
 
 ### How it works
 
@@ -113,7 +113,7 @@ Recommendation: [what to do next — proceed as-is, add a safeguard, or rethink]
 
 - **Max 2 rounds.** Not 3, not 5. Two rounds of bull/bear is enough to surface real risk. More rounds is deliberation theater.
 - **Total debate output under 300 words.** Compress, don't expand.
-- **No debate on R0 decisions.** If it's easily reversed, just do it.
+- **No debate on R2 decisions.** If it's easily reversed, just do it.
 - **Operator can cut the debate at any point** with `dissent override`. The debate serves the builder, not the process.
 
 ---
